@@ -20,20 +20,32 @@
     height: 100%;
     background: #0A0A0B;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     font-family: -apple-system, sans-serif;
     color: #8B8B8F;
+    gap: 20px;
+  }
+  a.openlink {
+    color: #C9A961;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1px solid #C9A961;
+    padding: 10px 20px;
+    border-radius: 8px;
   }
 </style>
 
 <script>
   // Update this whenever you republish the Claude artifact
-  var TARGET_URL = "https://claude.ai/public/artifacts/57cd094e-9720-4939-b5da-0053e22b044f";
+  var TARGET_URL = "https://claude.ai/public/artifacts/0974f93d-8e1a-4483-869e-06d5175d49d2";
   window.location.replace(TARGET_URL);
 </script>
 </head>
 <body>
   <p>Opening Mallock Expenses…</p>
+  <a class="openlink" href="https://claude.ai/public/artifacts/0974f93d-8e1a-4483-869e-06d5175d49d2">Tap here if it doesn't open</a>
 </body>
 </html>
