@@ -7,8 +7,10 @@
 
 <!-- iOS home-screen behaviour -->
 <meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="apple-mobile-web-app-title" content="Mallock Expenses" />
+<meta name="theme-color" content="#0A0A0B" />
 
 <!-- iOS home-screen icon -->
 <link rel="apple-touch-icon" href="icon-180.png" />
@@ -17,16 +19,22 @@
 <style>
   html, body {
     margin: 0;
-    height: 100%;
+    min-height: 100%;
     background: #0A0A0B;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    color: #8B8B8F;
+  }
+  body {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    font-family: -apple-system, sans-serif;
-    color: #8B8B8F;
     gap: 20px;
+    padding: calc(env(safe-area-inset-top, 0px) + 32px) 24px calc(env(safe-area-inset-bottom, 0px) + 32px);
+    box-sizing: border-box;
+    text-align: center;
   }
+  [hidden] { display: none !important; }
   a.openlink {
     color: #C9A961;
     font-size: 16px;
@@ -36,16 +44,59 @@
     padding: 10px 20px;
     border-radius: 8px;
   }
+  .setup { display: flex; flex-direction: column; align-items: center; gap: 18px; max-width: 340px; }
+  .setup img { width: 76px; height: 76px; border-radius: 17px; }
+  .setup h1 { margin: 0; color: #F5F5F4; font-size: 20px; font-weight: 600; }
+  .setup ol { margin: 0; padding-left: 22px; text-align: left; color: #C9C9CC; font-size: 15px; line-height: 1.6; }
+  .setup b { color: #F5F5F4; font-weight: 600; }
+  .setup .note { font-size: 13px; line-height: 1.5; }
 </style>
 
 <script>
   // Update this whenever you republish the Claude artifact
   var TARGET_URL = "https://claude.ai/public/artifacts/16de72bc-ad58-49dc-9118-e2e79ef5e527#no_universal_links";
-  window.location.replace(TARGET_URL);
+
+  // Opened from the home-screen icon: go straight to the ledger.
+  // Opened in Safari on an iPhone or iPad: stay here, so the page can be
+  // added to the home screen with its own icon. Anywhere else: go straight on.
+  var launchedFromHomeScreen =
+    window.navigator.standalone === true ||
+    (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches);
+  var ua = navigator.userAgent || "";
+  var isIOS = /iPhone|iPad|iPod/.test(ua) ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+  if (launchedFromHomeScreen || !isIOS) {
+    window.location.replace(TARGET_URL);
+  } else {
+    document.documentElement.className = "setup-mode";
+  }
 </script>
 </head>
 <body>
-  <p>Opening Mallock Expenses…</p>
-  <a class="openlink" href="https://claude.ai/public/artifacts/16de72bc-ad58-49dc-9118-e2e79ef5e527#no_universal_links">Tap here if it doesn't open</a>
+  <div id="opening">
+    <p>Opening Mallock Expenses…</p>
+  </div>
+
+  <div class="setup" id="setup" hidden>
+    <img src="icon-180.png" alt="" />
+    <h1>Mallock Expenses</h1>
+    <ol>
+      <li>Tap <b>Share</b> in Safari's toolbar.</li>
+      <li>Choose <b>Add to Home Screen</b>.</li>
+      <li>Turn on <b>Open as Web App</b> if it's shown, then tap <b>Add</b>.</li>
+    </ol>
+    <p class="note">The new icon opens the ledger directly.</p>
+  </div>
+
+  <a class="openlink" id="openlink" href="https://claude.ai/public/artifacts/16de72bc-ad58-49dc-9118-e2e79ef5e527#no_universal_links">Tap here if it doesn't open</a>
+
+  <script>
+    if (document.documentElement.className === "setup-mode") {
+      document.getElementById("opening").hidden = true;
+      document.getElementById("setup").hidden = false;
+      document.getElementById("openlink").textContent = "Open the ledger now";
+    }
+  </script>
 </body>
 </html>
